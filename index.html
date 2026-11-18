@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Северный баланс</title>
+<script src="https://telegram.org"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 16px; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .title { font-size: 20px; font-weight: 700; color: #38bdf8; }
+  .card { background: #1e293b; border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+  label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
+  select, input[type=range] { width: 100%; }
+  select { background: #0f172a; color: white; border: 1px solid #334155; padding: 10px; border-radius: 10px; font-size: 16px; }
+  .salary-val { font-size: 26px; font-weight: 800; color: #fff; margin: 4px 0 10px; }
+  .chart-box { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+  .donut { width: 105px; height: 105px; border-radius: 50%; background: conic-gradient(#38bdf8 0% 35%, #818cf8 35% 58%, #f472b6 58% 70%, #34d399 70% 100%); display: flex; align-items: center; justify-content: center; }
+  .donut-inner { width: 70px; height: 70px; background: #1e293b; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .legend { font-size: 13px; line-height: 1.8; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+  .result { background: linear-gradient(135deg, #0284c7, #2563eb); border-radius: 16px; padding: 16px; text-align: center; }
+  .net-val { font-size: 26px; font-weight: 800; margin: 4px 0; }
+  .comfort { font-size: 13px; background: rgba(255,255,255,0.2); display: inline-block; padding: 4px 12px; border-radius: 20px; margin-top: 6px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="title">❄️ Северный баланс</div>
+  </div>
+
+  <div class="card">
+    <label>Город переезда</label>
+    <select id="city" onchange="calc()">
+      <option value="126000">Норильск (базовые траты ~126 000 ₽)</option>
+      <option value="115000">Салехард (базовые траты ~115 000 ₽)</option>
+      <option value="85000">Мурманск (базовые траты ~85 000 ₽)</option>
+      <option value="92000">Сургут (базовые траты ~92 000 ₽)</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <label>Предлагаемая зарплата (на руки)</label>
+    <div class="salary-val" id="salText">180 000 ₽</div>
+    <input type="range" id="salary" min="60000" max="400000" step="5000" value="180000" oninput="calc()">
+  </div>
+
+  <div class="card">
+    <label>Распределение бюджета (Росстат + чеки)</label>
+    <div class="chart-box">
+      <div class="donut">
+        <div class="donut-inner">
+          <span style="font-size:10px; color:#94a3b8;">Остаток</span>
+          <span id="pctText" style="font-weight:700; color:#34d399;">30%</span>
+        </div>
+      </div>
+      <div class="legend">
+        <div><span class="dot" style="background:#38bdf8;"></span>Аренда: <b id="rentText">63 000 ₽</b></div>
+        <div><span class="dot" style="background:#818cf8;"></span>Продукты: <b id="foodText">41 400 ₽</b></div>
+        <div><span class="dot" style="background:#f472b6;"></span>ЖКХ и транс.: <b id="utilText">21 600 ₽</b></div>
+        <div><span class="dot" style="background:#34d399;"></span>Остаток: <b id="saveText">54 000 ₽</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result">
+    <div style="font-size:13px; opacity:0.9;">Чистый остаток после всех трат</div>
+    <div class="net-val" id="netVal">54 000 ₽ / мес</div>
+    <div class="comfort" id="comfortVal">Индекс комфорта: 7.4 / 10</div>
+  </div>
+
+<script>
+  window.Telegram.WebApp.expand();
+  function calc() {
+    const sal = parseInt(document.getElementById('salary').value);
+    const expenses = parseInt(document.getElementById('city').value);
+    const net = sal - expenses;
+    const rent = Math.round(expenses * 0.5);
+    const food = Math.round(expenses * 0.33);
+    const util = expenses - rent - food;
+    const pct = Math.max(0, Math.round((net / sal) * 100));
+    const score = Math.min(10, Math.max(1, (sal / expenses * 5.2).toFixed(1)));
+
+    document.getElementById('salText').innerText = sal.toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('rentText').innerText = rent.toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('foodText').innerText = food.toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('utilText').innerText = util.toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('saveText').innerText = (net > 0 ? net : 0).toLocaleString('ru-RU') + ' ₽';
+    document.getElementById('pctText').innerText = pct + '%';
+    document.getElementById('netVal').innerText = net.toLocaleString('ru-RU') + ' ₽ / мес';
+    document.getElementById('comfortVal').innerText = 'Индекс комфорта: ' + score + ' / 10';
+  }
+</script>
+</body>
+</html>
