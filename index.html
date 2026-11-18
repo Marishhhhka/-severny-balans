@@ -11,11 +11,11 @@
   .title { font-size: 20px; font-weight: 700; color: #38bdf8; }
   .card { background: #1e293b; border-radius: 16px; padding: 16px; margin-bottom: 14px; }
   label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
-  select, input[type=range] { width: 100%; }
-  select { background: #0f172a; color: white; border: 1px solid #334155; padding: 10px; border-radius: 10px; font-size: 16px; }
+  select, input[type=range] { width: 100%; box-sizing: border-box; }
+  select { background: #0f172a; color: white; border: 1px solid #334155; padding: 11px; border-radius: 10px; font-size: 15px; }
   .salary-val { font-size: 26px; font-weight: 800; color: #fff; margin: 4px 0 10px; }
-  .chart-box { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
-  .donut { width: 105px; height: 105px; border-radius: 50%; background: conic-gradient(#38bdf8 0% 35%, #818cf8 35% 58%, #f472b6 58% 70%, #34d399 70% 100%); display: flex; align-items: center; justify-content: center; }
+  .chart-box { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; gap: 12px; }
+  .donut { width: 105px; height: 105px; min-width: 105px; border-radius: 50%; background: conic-gradient(#38bdf8 0% 35%, #818cf8 35% 58%, #f472b6 58% 70%, #34d399 70% 100%); display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
   .donut-inner { width: 70px; height: 70px; background: #1e293b; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .legend { font-size: 13px; line-height: 1.8; }
   .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
@@ -30,47 +30,115 @@
   </div>
 
   <div class="card">
-    <label>Город переезда</label>
+    <label>Город переезда (50 северных городов)</label>
     <select id="city" onchange="calc()">
-      <option value="126000">Норильск (базовые траты ~126 000 ₽)</option>
-      <option value="115000">Салехард (базовые траты ~115 000 ₽)</option>
-      <option value="85000">Мурманск (базовые траты ~85 000 ₽)</option>
-      <option value="92000">Сургут (базовые траты ~92 000 ₽)</option>
+      <optgroup label="Ямало-Ненецкий АО (ЯНАО)">
+        <option value="115000">Салехард (~115 000 ₽)</option>
+        <option value="112000">Новый Уренгой (~112 000 ₽)</option>
+        <option value="105000">Ноябрьск (~105 000 ₽)</option>
+        <option value="108000">Надым (~108 000 ₽)</option>
+        <option value="106000">Губкинский (~106 000 ₽)</option>
+        <option value="104000">Муравленко (~104 000 ₽)</option>
+        <option value="110000">Лабытнанги (~110 000 ₽)</option>
+        <option value="114000">Тарко-Сале (~114 000 ₽)</option>
+      </optgroup>
+
+      <optgroup label="Ханты-Мансийский АО (ХМАО — Югра)">
+        <option value="94000">Сургут (~94 000 ₽)</option>
+        <option value="96000">Ханты-Мансийск (~96 000 ₽)</option>
+        <option value="89000">Нижневартовск (~89 000 ₽)</option>
+        <option value="87000">Нефтеюганск (~87 000 ₽)</option>
+        <option value="92000">Когалым (~92 000 ₽)</option>
+        <option value="86000">Нягань (~86 000 ₽)</option>
+        <option value="85000">Мегион (~85 000 ₽)</option>
+        <option value="88000">Лангепас (~88 000 ₽)</option>
+        <option value="86000">Радужный (~86 000 ₽)</option>
+        <option value="85000">Урай (~85 000 ₽)</option>
+        <option value="87000">Югорск (~87 000 ₽)</option>
+        <option value="91000">Белоярский (~91 000 ₽)</option>
+      </optgroup>
+
+      <optgroup label="Мурманская область">
+        <option value="88000">Мурманск (~88 000 ₽)</option>
+        <option value="84000">Североморск (~84 000 ₽)</option>
+        <option value="79000">Апатиты (~79 000 ₽)</option>
+        <option value="85000">Кировск (~85 000 ₽)</option>
+        <option value="80000">Мончегорск (~80 000 ₽)</option>
+        <option value="78000">Кандалакша (~78 000 ₽)</option>
+        <option value="77000">Оленегорск (~77 000 ₽)</option>
+        <option value="82000">Полярные Зори (~82 000 ₽)</option>
+      </optgroup>
+
+      <optgroup label="Красноярский край (Север)">
+        <option value="128000" selected>Норильск (~128 000 ₽)</option>
+        <option value="124000">Дудинка (~124 000 ₽)</option>
+        <option value="116000">Игарка (~116 000 ₽)</option>
+        <option value="81000">Лесосибирск (~81 000 ₽)</option>
+        <option value="83000">Енисейск (~83 000 ₽)</option>
+      </optgroup>
+
+      <optgroup label="Архангельская область и НАО">
+        <option value="84000">Архангельск (~84 000 ₽)</option>
+        <option value="83000">Северодвинск (~83 000 ₽)</option>
+        <option value="78000">Котлас (~78 000 ₽)</option>
+        <option value="118000">Нарьян-Мар (~118 000 ₽)</option>
+      </optgroup>
+
+      <optgroup label="Республика Коми и Карелия">
+        <option value="82000">Сыктывкар (~82 000 ₽)</option>
+        <option value="85000">Ухта (~85 000 ₽)</option>
+        <option value="84000">Усинск (~84 000 ₽)</option>
+        <option value="76000">Воркута (~76 000 ₽)</option>
+        <option value="81000">Петрозаводск (~81 000 ₽)</option>
+        <option value="79000">Костомукша (~79 000 ₽)</option>
+      </optgroup>
+
+      <optgroup label="Якутия и Дальний Восток">
+        <option value="114000">Якутск (~114 000 ₽)</option>
+        <option value="110000">Мирный (~110 000 ₽)</option>
+        <option value="106000">Нерюнгри (~106 000 ₽)</option>
+        <option value="125000">Магадан (~125 000 ₽)</option>
+        <option value="122000">Петропавловск-Камчатский (~122 000 ₽)</option>
+        <option value="116000">Южно-Сахалинск (~116 000 ₽)</option>
+        <option value="142000">Анадырь (~142 000 ₽)</option>
+      </optgroup>
     </select>
   </div>
 
   <div class="card">
     <label>Предлагаемая зарплата (на руки)</label>
-    <div class="salary-val" id="salText">180 000 ₽</div>
-    <input type="range" id="salary" min="60000" max="400000" step="5000" value="180000" oninput="calc()">
+    <div class="salary-val" id="salText">230 000 ₽</div>
+    <input type="range" id="salary" min="60000" max="450000" step="5000" value="230000" oninput="calc()">
   </div>
 
   <div class="card">
     <label>Распределение бюджета (Росстат + чеки)</label>
     <div class="chart-box">
-      <div class="donut">
+      <div class="donut" id="donutChart">
         <div class="donut-inner">
           <span style="font-size:10px; color:#94a3b8;">Остаток</span>
-          <span id="pctText" style="font-weight:700; color:#34d399;">30%</span>
+          <span id="pctText" style="font-weight:700; color:#34d399;">44%</span>
         </div>
       </div>
       <div class="legend">
-        <div><span class="dot" style="background:#38bdf8;"></span>Аренда: <b id="rentText">63 000 ₽</b></div>
-        <div><span class="dot" style="background:#818cf8;"></span>Продукты: <b id="foodText">41 400 ₽</b></div>
-        <div><span class="dot" style="background:#f472b6;"></span>ЖКХ и транс.: <b id="utilText">21 600 ₽</b></div>
-        <div><span class="dot" style="background:#34d399;"></span>Остаток: <b id="saveText">54 000 ₽</b></div>
+        <div><span class="dot" style="background:#38bdf8;"></span>Аренда: <b id="rentText">64 000 ₽</b></div>
+        <div><span class="dot" style="background:#818cf8;"></span>Продукты: <b id="foodText">42 240 ₽</b></div>
+        <div><span class="dot" style="background:#f472b6;"></span>ЖКХ и транс.: <b id="utilText">21 760 ₽</b></div>
+        <div><span class="dot" style="background:#34d399;"></span>Остаток: <b id="saveText">102 000 ₽</b></div>
       </div>
     </div>
   </div>
 
   <div class="result">
     <div style="font-size:13px; opacity:0.9;">Чистый остаток после всех трат</div>
-    <div class="net-val" id="netVal">54 000 ₽ / мес</div>
-    <div class="comfort" id="comfortVal">Индекс комфорта: 7.4 / 10</div>
+    <div class="net-val" id="netVal">102 000 ₽ / мес</div>
+    <div class="comfort" id="comfortVal">Индекс комфорта: 9.3 / 10</div>
   </div>
 
 <script>
-  window.Telegram.WebApp.expand();
+  if (window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.expand();
+  }
   function calc() {
     const sal = parseInt(document.getElementById('salary').value);
     const expenses = parseInt(document.getElementById('city').value);
@@ -81,6 +149,13 @@
     const pct = Math.max(0, Math.round((net / sal) * 100));
     const score = Math.min(10, Math.max(1, (sal / expenses * 5.2).toFixed(1)));
 
+    const pRent = Math.min(100, Math.round((rent / sal) * 100));
+    const pFood = Math.min(100 - pRent, Math.round((food / sal) * 100));
+    const pUtil = Math.min(100 - pRent - pFood, Math.round((util / sal) * 100));
+
+    document.getElementById('donutChart').style.background = 
+      `conic-gradient(#38bdf8 0% ${pRent}%, #818cf8 ${pRent}% ${pRent + pFood}%, #f472b6 ${pRent + pFood}% ${pRent + pFood + pUtil}%, #34d399 ${pRent + pFood + pUtil}% 100%)`;
+
     document.getElementById('salText').innerText = sal.toLocaleString('ru-RU') + ' ₽';
     document.getElementById('rentText').innerText = rent.toLocaleString('ru-RU') + ' ₽';
     document.getElementById('foodText').innerText = food.toLocaleString('ru-RU') + ' ₽';
@@ -90,6 +165,7 @@
     document.getElementById('netVal').innerText = net.toLocaleString('ru-RU') + ' ₽ / мес';
     document.getElementById('comfortVal').innerText = 'Индекс комфорта: ' + score + ' / 10';
   }
+  calc();
 </script>
 </body>
 </html>
